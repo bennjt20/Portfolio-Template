@@ -321,11 +321,11 @@ options(repos = r)</code></pre>
 <pre class="r"><code>install.packages(&#39;tidyr&#39;)</code></pre>
 <pre><code>## 
 ## The downloaded binary packages are in
-##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpobtJax/downloaded_packages</code></pre>
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpUHYTbl/downloaded_packages</code></pre>
 <pre class="r"><code>install.packages(&#39;readr&#39;)</code></pre>
 <pre><code>## 
 ## The downloaded binary packages are in
-##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpobtJax/downloaded_packages</code></pre>
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpUHYTbl/downloaded_packages</code></pre>
 <pre class="r"><code>library(ggplot2)
 library(tidyr)</code></pre>
 <pre class="r"><code>library(readr)
@@ -340,7 +340,7 @@ method treats birth year as a continuous or numeric variable.</li>
   geom_point(color = &quot;pink&quot;) +
   labs(title = &quot;Life expectancy vs. happiness: A view by birth year cohorts&quot;,
        x = &quot;Happiness (0-100 scale)&quot;, y = &quot;Life expectancy (in years)&quot;, size = &quot;Birth Year&quot;)</code></pre>
-<p><img src="p10_files/figure-html/2.%20Icon%20size%20rep%20value-1.png" width="672" /></p>
+<p><img src="p10-Cohorts_files/figure-html/2.%20Icon%20size%20rep%20value-1.png" width="672" /></p>
 <p>As this graph makes clear, the icons quickly crowd on top of each
 other. As this initial effort makes clear, what we need is to assign
 discrete colors to year cohorts.</p>
@@ -357,7 +357,7 @@ labs(title = &quot;Life expectancy vs. happiness&quot;,
 subtitle = &quot;A view by birth year cohorts&quot;,
 x = &quot;Happiness (0-100 scale)&quot;, y = &quot;Life expectancy (in years)&quot;, 
 color = &quot;Year Cohort&quot;)  </code></pre>
-<p><img src="p10_files/figure-html/3.%20Icon%20color%20rep%20cohort-1.png" width="672" /></p>
+<p><img src="p10-Cohorts_files/figure-html/3.%20Icon%20color%20rep%20cohort-1.png" width="672" /></p>
 <p>This is a great improvement. However, we could use a line
 representing the mean, just to clarify what exactly the life expectancy
 bottom line is, by cohort. To that end, the following website is spot
@@ -383,7 +383,7 @@ labs(title = &quot;Life expectancy vs. happiness&quot;,
 subtitle = &quot;A view by birth year cohorts&quot;,
 x = &quot;Happiness (0-100 scale)&quot;, y = &quot;Life expectancy (in years)&quot;, 
 color = &quot;Year Cohort&quot;)  </code></pre>
-<p><img src="p10_files/figure-html/4.%20Icon%20color%20rep%20cohort%20with%20mean-1.png" width="672" /></p>
+<p><img src="p10-Cohorts_files/figure-html/4.%20Icon%20color%20rep%20cohort%20with%20mean-1.png" width="672" /></p>
 <p>Now we have three lines for the three different cohorts that
 represents the mean of that cohort level. That is very close to what we
 are looking for! At this point, it is a good idea to step back and
@@ -407,7 +407,7 @@ color = &quot;Year Cohort&quot;)  +
   geom_text(x=35, y=72, label=&quot;mean, 1990-2000 cohort&quot;, color=&quot;blue&quot;)+
     geom_text(x=35, y=60, label=&quot;mean, 1960-1989 cohort&quot;, color=&quot;springgreen4&quot;)+
   geom_text(x=35, y=95, label=&quot;mean, 1930-1959 cohort&quot;, color=&quot;red&quot;)</code></pre>
-<p><img src="p10_files/figure-html/5.%20Icon%20color%20rep%20cohort%20with%20mean,%20labeled-1.png" width="672" /></p>
+<p><img src="p10-Cohorts_files/figure-html/5.%20Icon%20color%20rep%20cohort%20with%20mean,%20labeled-1.png" width="672" /></p>
 <ol start="6" style="list-style-type: decimal">
 <li>Finally, we can include regression lines.</li>
 </ol>
@@ -425,7 +425,7 @@ color = &quot;Year Cohort&quot;)  +
     geom_text(x=35, y=60, label=&quot;mean, 1960-1989 cohort&quot;, color=&quot;springgreen4&quot;)+
   geom_text(x=35, y=95, label=&quot;mean, 1930-1959 cohort&quot;, color=&quot;red&quot;)</code></pre>
 <pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
-<p><img src="p10_files/figure-html/6.%20Icon%20color%20rep%20cohort%20with%20mean,%20labeled-1.png" width="672" /></p>
+<p><img src="p10-Cohorts_files/figure-html/6.%20Icon%20color%20rep%20cohort%20with%20mean,%20labeled-1.png" width="672" /></p>
 <p>The graph is starting to get a little bit busy at this point.
 However, the fundamental relationships that I wanted to highlight can be
 seen: The mean for the 1930-1959 cohort is greater than the other two
