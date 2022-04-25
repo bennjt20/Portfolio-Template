@@ -1,11 +1,114 @@
 ---
-title: "Portfolio 1"
+title: "Decorative Data Point Icons, Final"
+output: html_document
+date: 'March 29, 2022'
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+The following is intended to be an easy-to-follow tutorial on creating what I like to call decorative data points. In other words, this tutorial will show you how to take your favorite pictures and insert them into graphs as the data points!
+Have you ever been bored by the standard black or red dots that depict data points?
+Have you ever wanted some other image to appear instead of those plain shapes? For instance... Cats!?
+The following tutorial will show how to create both a photographic background for your graph and -more importantly- an attention-grabbing icon. 
+This code for this tutorial is based on a blog post by Emma Rand: https://buzzrbeeline.blog/2018/06/13/fun-and-easy-r-graphs-with-images/
 
-```{r load-packages, message=FALSE}
-library(tidyverse) 
-library(datasauRus)
+First, install packages / libraries, and a code that I need for Mac. 
+
+```{r Stop the errors!}
+r = getOption("repos")
+r["CRAN"] = "http://cran.us.r-project.org"
+options(repos = r)
 ```
 
+```{r Packages}
+install.packages('tidyr')
+install.packages('readr')
+```
+
+```{r Library}
+install.packages('ggplot2')
+library(ggplot2)
+library(tidyr)
+```
+
+1) We'll be using ggplot to create the final graph, so make sure that's installed. 
+
+```{r ggplot}
+install.packages("ggplot")
+```
+
+2) Install the following packages. As you can see, they mostly pertain to images.
+```{r libs}
+install.packages('ggimage')
+library(png)
+library(jpeg)
+library(grid)
+library(ggimage)
+```
+
+3) Let's make up a small data set for demonstration purposes. 
+```{r making data}
+cats <- data.frame(age = c(0.5, 1, 1.5, 2, 2.5, 3),
+                  incidents = c(40, 34, 32, 22,18, 10))
+```
+
+```{r Df to CSV}
+library(readr)
+write_csv(cats, "~/Documents/GitHub/Portfolio-Template/p01_files/cats.csv") 
+```
+
+
+3.1) Also, and very importantly, we are presuming that you have two photos in your working directory: one for a background, and one for the data point icon. For the purposes of this tutorial, we'll call those "catbox.png" for the background, and "cat1.png"
+Those curious about the code should definitely take a look at Emma Rand's blog (link above).
+
+```{r read in image file, Photo in directory}
+cat1.png <- readPNG("~/Documents/GitHub/Portfolio-Template/p01_files/cat1.png")
+catbox.png <- readPNG("~/Documents/GitHub/Portfolio-Template/p01_files/catbox.png")
+```
+
+4) The basic graph would look something like this. 
+```{r basic visual}
+ggplot(data = cats, aes(x = age, y = incidents)) +
+  geom_point() +
+  xlab("Age (years)") +
+  ylab("Number of Incidents") +
+  ylim(0, 45)
+```
+
+5) Let's take a look at that graph with a background image.
+```{r insert background image}
+ggplot(data = cats, aes(x = age, y = incidents)) +
+  annotation_custom(rasterGrob(catbox.png, 
+                               width = unit(1,"npc"),
+                               height = unit(1,"npc")), 
+                    -Inf, Inf, -Inf, Inf) +
+  geom_point() +
+  xlab("Age (years)") +
+  ylab("Number of Incidents") +
+  ylim(0, 45)
+```
+
+Frowney cat adds a twist to the graph. 
+
+6) Now let's work on the decorative data point.
+
+```{r Decorate your data points!}
+cats$image1 <- "cat1.png"
+cats$image <- "cat1.png"
+```
+That just added a column called "image1" to the dataframe "cats".
+
+7) Next, we modify the code for the graph to include our data point photo which is now labeled "image1", for the column in our dataframe. 
+
+```{r Add the decorative data points to the graph}
+ggplot(data = cats, aes(x = age, y = incidents)) +
+  annotation_custom(rasterGrob(img_catbox, 
+                               width = unit(1,"npc"),
+                               height = unit(1,"npc")), 
+                    -Inf, Inf, -Inf, Inf) +
+  geom_image(aes(image = image1), size=.15) +
+  xlab("Age (years)") +
+  ylab("Number of Incidents") +
+  ylim(0, 45)
+```
+
+
+9) Reel them in with the background, and keep them riveted with the data point icons!
