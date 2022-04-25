@@ -10,8 +10,9 @@
 
 
 
+<meta name="date" content="2022-04-05" />
 
-<title>Portfolio 4</title>
+<title>Portfolio 4- Gender Trends in U.S. Suicide and Depression, 2006-2015</title>
 
 <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -293,18 +294,142 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 4</h1>
+<h1 class="title toc-ignore">Portfolio 4- Gender Trends in U.S. Suicide
+and Depression, 2006-2015</h1>
+<h4 class="date">April 5, 2022</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>For this project, I wanted to take the concept of disaggregation and
+apply that visually. Specifically, I want to disaggregate suicide rates
+and rates of depression by gender. Doing this shows that men and women
+have dramatically different rates of both suicide and depression. By
+visualizing these gender differences one is struck by the need to
+explore additional variables that come into play for men and women,
+respectively.</p>
+<p>Install packages / libraries, and a code that I need for Mac.</p>
+<pre class="r"><code>r = getOption(&quot;repos&quot;)
+r[&quot;CRAN&quot;] = &quot;http://cran.us.r-project.org&quot;
+options(repos = r)</code></pre>
+<ol style="list-style-type: decimal">
+<li>First, installing packages / libraries.</li>
+</ol>
+<pre class="r"><code>library(ggplot2)
+library(tidyr)</code></pre>
+<pre class="r"><code>library(readr)
+SD_Data &lt;- read_csv(&quot;~/Documents/GitHub/Portfolio4-USDSG/SDData.csv&quot;) </code></pre>
+<pre><code>## Rows: 40 Columns: 10
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (4): Subject, Sex, SexSubject, SexSubjectValue
+## dbl (6): Time, Value, maleS, maleDep, femaleS, femaleDep
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>View(SD_Data)</code></pre>
+<ol style="list-style-type: decimal">
+<li>Let’s take a look at our basic plot</li>
+</ol>
+<pre class="r"><code>ggplot(data = SD_Data, aes(x= Time, y = Value)) +
+   geom_point(alpha = 0.7, show.legend = FALSE) +
+   labs(title = &#39;Year: 2006-2015&#39;, x = &#39;Year&#39;, y = &#39;Number of Deaths / Suicides&#39;)</code></pre>
+<p><img src="p04_files/figure-html/Scatterplot1-1.png" width="672" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li>We need to designate what these data points represent, using labels
+and colors. We know we’re dealing with Sex, so let’s start with
+that.</li>
+</ol>
+<pre class="r"><code>ggplot(data = SD_Data, aes(x= Time, y = Value, color=Sex)) +
+   geom_point(alpha = 0.7) +
+   labs(title = &#39;Year: 2006-2015&#39;, x = &#39;Year&#39;, y = &#39;Number of Deaths / Suicides&#39;, color = &quot;Sex&quot;)</code></pre>
+<p><img src="p04_files/figure-html/Scatterplot2-1.png" width="672" /></p>
+<p>That is significantly better. R automatically gave us colors that
+sort of symbolize the underlying construct, or at least provide an
+intuitive color designation for the variable Sex. What’s missing is that
+we can not tell the two behavioral variables apart from one another. So
+we need to assign some form of label to these two M/F variables in a way
+that still maintains the gender designations.</p>
+<p>One way would be to concatenate the data. Let’s create a SexSubject
+variable. Instead of just plotting sex, which gives us 4 different
+plotted variables with two colors, we can start to distinguish the four
+different outcomes.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Plotting the new SexSubject variable.</li>
+</ol>
+<pre class="r"><code>ggplot(data = SD_Data, aes(x= Time, y = Value, color=SexSubject)) +
+   geom_point(alpha = 0.7) +
+   labs(title = &#39;Year: 2006-2015&#39;, x = &#39;Year&#39;, y = &#39;Number of Deaths / Suicides&#39;, color = &quot;Suicide and Depression, by Sex&quot;)</code></pre>
+<p><img src="p04_files/figure-html/Scatterplot3-1.png" width="672" /></p>
+<p>This is a step forward because we now clearly identify the four
+different categories we’re interested in. However, we’ve lost the
+intuitive aspect of the color system.</p>
+<ol start="4" style="list-style-type: decimal">
+<li>We could try to fine-tune the colors. For instance, using light red
+for female depression and dark red for female suicide. We’ll try
+that.</li>
+</ol>
+<pre class="r"><code>colors &lt;- c(&quot;Male Suicide&quot; = &quot;blue1&quot;, &quot;Female Suicide&quot; = &quot;firebrick1&quot;, &quot;Male Depression&quot; = &quot;lightblue2&quot;, &quot;Female Depression&quot; = &quot;lightpink&quot;)
+ggplot(SD_Data, aes(x=Time)) +
+  geom_point(aes(y = maleS, color = &quot;Male Suicide&quot;), size = 1.5) +
+  geom_point(aes(y = maleDep, color = &quot;Male Depression&quot;), size = 1.5) +
+  geom_point(aes(y = femaleS, color = &quot;Female Suicide&quot;), size = 1.5) +
+  geom_point(aes(y = femaleDep, color = &quot;Female Depression&quot;), size = 1.5) +
+labs(                                
+   x = &quot;Date&quot;,
+   y = &quot;Number of Deaths / Suicides&quot;,
+   color = &quot;Suicide and Depression, by Sex&quot;
+ ) +
+scale_color_manual(values = colors) +
+theme(text = element_text(size=7),
+        axis.text.x = element_text(angle=45, hjust=1))</code></pre>
+<pre><code>## Warning: Removed 30 rows containing missing values (geom_point).
+## Removed 30 rows containing missing values (geom_point).
+## Removed 30 rows containing missing values (geom_point).
+## Removed 30 rows containing missing values (geom_point).</code></pre>
+<p><img src="p04_files/figure-html/Scatterplot5-1.png" width="672" /></p>
+<p>This is a better visual. However, even using sharply contrasting
+colors leaves us with room for improvement.</p>
+<ol start="5" style="list-style-type: decimal">
+<li>To make the meaning of the data points even more obvious, shapes
+would probably help.</li>
+</ol>
+<pre class="r"><code>colors &lt;- c(&quot;Male Suicide&quot; = &quot;blue1&quot;, &quot;Female Suicide&quot; = &quot;firebrick1&quot;, &quot;Male Depression&quot; = &quot;lightblue2&quot;, &quot;Female Depression&quot; = &quot;lightpink&quot;)
+ggplot(SD_Data, aes(x=Time)) +
+  geom_point(aes(y = maleS, color = &quot;Male Suicide&quot;), size = 2) +
+  geom_point(aes(y = maleDep, color = &quot;Male Depression&quot;), shape = 18, size = 2) +
+  geom_point(aes(y = femaleS, color = &quot;Female Suicide&quot;), size = 2) +
+  geom_point(aes(y = femaleDep, color = &quot;Female Depression&quot;), shape = 18, size = 2) +
+labs(                                
+   x = &quot;Date&quot;,
+   y = &quot;Number of Deaths / Suicides&quot;,
+   color = &quot;Suicide and Depression, by Sex&quot;
+ ) +
+scale_color_manual(values = colors) +
+theme(text = element_text(size=7),
+        axis.text.x = element_text(angle=45, hjust=1))</code></pre>
+<pre><code>## Warning: Removed 30 rows containing missing values (geom_point).
+## Removed 30 rows containing missing values (geom_point).
+## Removed 30 rows containing missing values (geom_point).
+## Removed 30 rows containing missing values (geom_point).</code></pre>
+<p><img src="p04_files/figure-html/Scatterplot6-1.png" width="672" /></p>
+<p>This matches the design that, in my opinion, depicts the categories
+in a manner that is easily digestible visually, and intuitive. Men have
+remarkably higher rates of suicide than women, while having similar or
+even lower rates of depression. The trend lines for men tend to indicate
+two different trajectories where one segment of the male population
+grows slightly less depressed while another segment grows more suicidal.
+That would be a more likely explanation for the divergence of male
+suicide from male depression. On the other hand, there could be a rather
+more complicated explanation. The male population may be growing less
+inclined to report depression while simultaneously becoming more likely
+to commit suicide. In any event, by visualizing the gender differences
+and variations in these trends, it becomes clear that broad explanations
+are insufficient.</p>
+<p>In terms of the layout, the legend needs a bit of improvement. I
+spent way too long trying to get the legend icon shapes to match the
+shape of the data points in the graph. That will have to wait for
+another day!</p>
 
 
 

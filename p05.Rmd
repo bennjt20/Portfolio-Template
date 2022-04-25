@@ -1,5 +1,83 @@
 ---
-title: "Portfolio 5"
+title: "Portfolio 5- Time Series Data"
+output: html_document
+date: 'April 10, 2022'
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+The goal of this portfolio is to make sure that I can work with time series data when I have two variables from different data sets where the times do not match up perfectly. 
+Here, I have data on suicide rates from 1999-2019. I have data from a separate source on social media usage over time, covering 2015-2021. 
+Data on average number of minutes of U.S. social media usage by year comes from emarketer.com:
+https://www.emarketer.com/content/average-social-media-time-spent
+Data on suicide US rates comes from the official US government National Institute of Mental Health website:
+https://www.nimh.nih.gov/health/statistics/suicide#part_2557
+
+Let's see how we can isolate out only the years for which we have data on both variables, which would be the years 2015-2019.
+
+1) First, installing packages / libraries. 
+
+```{r Stop the errors!}
+r = getOption("repos")
+r["CRAN"] = "http://cran.us.r-project.org"
+options(repos = r)
+```
+
+```{r Packages}
+install.packages('tidyr')
+install.packages('readr')
+```
+
+```{r Library}
+library(ggplot2)
+library(tidyr)
+```
+
+```{r DataCSV} 
+library(readr)
+TimeSeries <- read_csv("~/Documents/GitHub/Portfolio5-TimeSeries/TimeSeries.csv")
+View(TimeSeries)
+```
+
+2) To isolate the specific years 2015-2019, we can use the following code. This code creates a separate df named "DateRange" containing the specific years we are interested in. 
+The "write" command will save our df named "DateRange" as a csv. That way, we'll have a separate file containing our date range which we can share with others.
+
+```{r DateRange}
+DateRange <-TimeSeries [TimeSeries$Time >= "2015" & TimeSeries$Time <= "2019", ]
+write.csv(DateRange, "~/Documents/GitHub/Portfolio5-TimeSeries/CsvfromDf.csv")
+```
+
+```{r Test1}
+ggplot(DateRange, aes(Time)) +
+  geom_line(aes(y = Value_SMM, color = "SMM")) + 
+  geom_line(aes(y = Value_SR, color = "SR"))
+```
+
+When I initially tried to knit, I gott an error: 
+could not find function "ggplot"
+The command "{r Stop the errors!}" at line 18 fixed the error!
+
+Finally, to switch the color of these lines so that SR is red, we can manually change the colors assigned to each variable. Let's also add a legend.
+
+```{r Test2} 
+colors <- c("SMM" = "blue", "SR" = "red")
+ggplot(DateRange, aes(x=Time)) +
+  geom_line(aes(y = Value_SMM, color = "SMM"), size = 1.5) +
+  geom_line(aes(y = Value_SR, color="SR"), size = 1.5) +
+labs(                                
+   x = "Year",
+   y = "SR & SMM",
+   color = "Legend"
+ ) +
+scale_color_manual(values = colors) 
+```
+
+When I try to knit, I also get an error: 
+could not find function "ggplot"
+Once more, the command "{r Stop the errors!}" at line 18 fixed the error!
+
+Saving plots to file to show that the code did produce graphs.
+```{r Save plot to file}
+ggsave('000009.png', width=8, height=8)
+ggsave('000010.png', width=8, height=8)
+```
+
+

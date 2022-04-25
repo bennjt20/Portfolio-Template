@@ -1,5 +1,5 @@
 ---
-title: "Decorative Data Point Icons, Final"
+title: "Portfolio 1- Decorative Data Point Icons"
 output: html_document
 date: 'March 29, 2022'
 ---

@@ -10,8 +10,9 @@
 
 
 
+<meta name="date" content="2022-04-19" />
 
-<title>Portfolio 8</title>
+<title>Portfolio 8- Including Concise Text Labels within Graphs</title>
 
 <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -293,18 +294,267 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 8</h1>
+<h1 class="title toc-ignore">Portfolio 8- Including Concise Text Labels
+within Graphs</h1>
+<h4 class="date">April 19, 2022</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>With Portfolio 7, I saw how to insert text within a graph. This could
+be useful for all sorts of reasons. The drawback with the method I used
+was that I had to manually insert an x &amp; y coordinate for each text
+item, as well as a color and each individual text itself. Each text item
+requires one line of code. For this project, I want to see if there is a
+more concise code for doing this.</p>
+<ol style="list-style-type: decimal">
+<li>First, we must install packages / libraries, and a code that I need
+for Mac.</li>
+</ol>
+<pre class="r"><code>r = getOption(&quot;repos&quot;)
+r[&quot;CRAN&quot;] = &quot;http://cran.us.r-project.org&quot;
+options(repos = r)</code></pre>
+<pre class="r"><code>install.packages(&#39;tidyr&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpyTvOZc/downloaded_packages</code></pre>
+<pre class="r"><code>install.packages(&#39;readr&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpyTvOZc/downloaded_packages</code></pre>
+<pre class="r"><code>library(ggplot2)
+library(tidyr)</code></pre>
+<pre class="r"><code>install.packages(&quot;dplyr&quot;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpyTvOZc/downloaded_packages</code></pre>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Next, I will read my Excel docs into a data frame:</li>
+</ol>
+<pre class="r"><code>library(readr)
+dfMil &lt;-read.csv(&quot;~/Documents/GitHub/Portfolio7-VizStats2/dfMil.csv&quot;)
+View(dfMil)</code></pre>
+<pre class="r"><code>MilStatsExcel &lt;-read.csv(&quot;~/Documents/GitHub/Portfolio7-VizStats2/MilStatsExcel.csv&quot;)
+View(MilStatsExcel)</code></pre>
+<p>And we’ll need ggrepel for the Text boxes.</p>
+<pre class="r"><code>install.packages(&quot;ggrepel&quot;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpyTvOZc/downloaded_packages</code></pre>
+<pre class="r"><code>library(ggrepel)</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Here is my previous example, from Portfolio 7, of what we can do
+with the text boxes.</li>
+</ol>
+<pre class="r"><code>colors &lt;- c(&quot;Suic&quot; = &quot;red&quot;, &quot;CD&quot; = &quot;orange&quot;)
+ggplot(dfMil, aes(x=Time)) +
+  geom_line(aes(y = Suic, color = &quot;Suic&quot;), size = 1.5) +
+  geom_line(aes(y = CD, color=&quot;CD&quot;), size = 1.5) +
+labs(                                
+   x = &quot;Year&quot;,
+   y = &quot;Number of Mil. Suicides and Combat Deaths&quot;,
+   color = &quot;Legend&quot;
+ ) +
+scale_color_manual(values = colors) +
+  scale_x_continuous(breaks = c(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016)) +
+theme(text = element_text(size=7),
+        axis.text.x = element_text(angle=45, hjust=1)) +
+geom_text(x=2003, y=300, label=&quot;0.84&quot;, color=&quot;blue&quot;) +
+geom_text(x=2004, y=750, label=&quot;0.86&quot;, color=&quot;blue&quot;) +
+  geom_text(x=2005, y=750, label=&quot;0.79&quot;, color=&quot;blue&quot;) +
+geom_text(x=2006, y=775, label=&quot;0.83&quot;, color=&quot;blue&quot;) +
+geom_text(x=2007, y=850, label=&quot;0.87&quot;, color=&quot;blue&quot;) +
+  geom_text(x=2008, y=350, label=&quot;0.47&quot;, color=&quot;blue&quot;) +
+geom_text(x=2009, y=350, label=&quot;0.27&quot;, color=&quot;blue&quot;) +
+geom_text(x=2010, y=450, label=&quot;0.25&quot;, color=&quot;blue&quot;) +
+  geom_text(x=2011, y=400, label=&quot;0.22&quot;, color=&quot;blue&quot;) +
+  geom_text(x=2012, y=300, label=&quot;(see notes)&quot;, color=&quot;blue&quot;) +
+geom_text(x=2013, y=0, label=&quot;-0.19&quot;, color=&quot;blue&quot;) +
+  geom_text(x=2014, y=0, label=&quot;-0.29&quot;, color=&quot;blue&quot;) +
+  geom_text(x=2015, y=0, label=&quot;-0.36&quot;, color=&quot;blue&quot;) +
+  geom_text(x=2016, y=0, label=&quot;-0.42&quot;, color=&quot;blue&quot;)</code></pre>
+<p><img src="p08_files/figure-html/Text%20box%20into%20graph,%20manual%20method2-1.png" width="672" /></p>
+<p>That was close to what I’m looking for. However, the placement of the
+text needs a more aesthetic position that aligns with a quantitative
+meaning. Also, I really need more concise code for inserting multiple
+texts into a graph. Let’s see how we might be able to go about that.</p>
+<ol start="4" style="list-style-type: decimal">
+<li>Using a simple example from the RPubs website (<a
+href="https://rpubs.com/RatherBit/188960"
+class="uri">https://rpubs.com/RatherBit/188960</a>), I am going to
+mirror the example code with my own data. Here is the data example from
+RPubs:</li>
+</ol>
+<pre class="r"><code>library(car)</code></pre>
+<pre><code>## Loading required package: carData</code></pre>
+<pre><code>## 
+## Attaching package: &#39;car&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     recode</code></pre>
+<pre class="r"><code>data(cars)
+head(cars)</code></pre>
+<pre><code>##   speed dist
+## 1     4    2
+## 2     4   10
+## 3     7    4
+## 4     7   22
+## 5     8   16
+## 6     9   10</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Let’s look at our data frames:</li>
+</ol>
+<pre class="r"><code>str(cars) </code></pre>
+<pre><code>## &#39;data.frame&#39;:    50 obs. of  2 variables:
+##  $ speed: num  4 4 7 7 8 9 10 10 10 11 ...
+##  $ dist : num  2 10 4 22 16 10 18 26 34 17 ...</code></pre>
+<pre class="r"><code>str(dfMil) </code></pre>
+<pre><code>## &#39;data.frame&#39;:    17 obs. of  3 variables:
+##  $ Time: int  2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 ...
+##  $ CD  : int  0 0 0 312 735 739 769 847 352 346 ...
+##  $ Suic: int  153 155 174 190 197 182 213 211 268 309 ...</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>Next, we’ll summarize the model</li>
+</ol>
+<pre class="r"><code>mod &lt;- lm(dist ~speed, data=cars)
+summary(mod) </code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = dist ~ speed, data = cars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -29.069  -9.525  -2.272   9.215  43.201 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -17.5791     6.7584  -2.601   0.0123 *  
+## speed         3.9324     0.4155   9.464 1.49e-12 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 15.38 on 48 degrees of freedom
+## Multiple R-squared:  0.6511, Adjusted R-squared:  0.6438 
+## F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12</code></pre>
+<pre class="r"><code>mod_dfMil &lt;- lm(Suic ~Time, data=dfMil)
+summary(mod_dfMil) </code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Suic ~ Time, data = dfMil)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -68.27 -35.72  -3.50  21.72 131.62 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -48116.53    5119.81  -9.398 1.12e-07 ***
+## Time            24.11       2.55   9.456 1.04e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 51.5 on 15 degrees of freedom
+## Multiple R-squared:  0.8563, Adjusted R-squared:  0.8468 
+## F-statistic: 89.42 on 1 and 15 DF,  p-value: 1.038e-07</code></pre>
+<ol start="7" style="list-style-type: decimal">
+<li>Now, we’ll add labels to points using rownames.</li>
+</ol>
+<pre class="r"><code>plot(dist ~speed, col=&quot;lightblue&quot;, pch=19, cex=2,data=cars)
+# this will add labels to points using rownames:
+text(dist ~speed, labels=rownames(cars),data=cars, cex=0.9, font=2)</code></pre>
+<p><img src="p08_files/figure-html/Plot%20rownames-1.png" width="672" /></p>
+<pre class="r"><code>plot(Suic ~Time, col=&quot;lightblue&quot;, pch=19, cex=2,data=dfMil)
+text(Suic ~Time, labels=rownames(dfMil),data=dfMil, cex=0.9, font=2)</code></pre>
+<p><img src="p08_files/figure-html/Plot%20rownames2-1.png" width="672" /></p>
+<p>This code is just fine when we already have a row name built in to
+our data frame. Most of the time, I don’t know whether we can count on
+that. Clearly we need labels that illustrate something of interest to
+our data, when we do not have a row name. The following code allows us
+to use the data from ANY ROW in our data frame as the label for each
+individual data point.</p>
+<ol start="8" style="list-style-type: decimal">
+<li>Label using existing column from data frame.</li>
+</ol>
+<pre class="r"><code>plot(Suic ~Time,data=dfMil)
+text(Suic ~Time, labels=CD,data=dfMil, font=2)</code></pre>
+<p><img src="p08_files/figure-html/Model%20Ex1-1.png" width="672" /></p>
+<p>At this point, it is clear that the text labels will only be limited
+by our imagination, and whatever characters we can fit into a data
+frame!</p>
+<p>Let’s return to my graph from Portfolio 7. I wanted to insert text at
+each year, showing the correlation between two variables. I’m simply
+going to plug the correlations for each year into the data frame and
+create a new column named “Pvalue”, then add those P values as
+labels.</p>
+<p>Do do this, we can use this easy to follow code, from a site with way
+too many ads: <a
+href="https://r-lang.com/how-to-add-column-to-r-data-frame/"
+class="uri">https://r-lang.com/how-to-add-column-to-r-data-frame/</a></p>
+<ol start="9" style="list-style-type: decimal">
+<li>We can copy and paste values into our line of code. Make sure that
+the number of rows in our data frame (17) are equal to the length of our
+vector. The only drawback here is that I have to add a comma to each
+value, which could be time-consuming for large data sets. Of course,
+there is almost certainly code that automatically adds commas, but for
+now we’ll just go manual.</li>
+</ol>
+<pre class="r"><code>NewColumn &lt;- c(0,0,0,0.84,0.86,0.79,0.83,0.87,0.47,0.27,0.25,0.22,0.00E+00,-0.19,-0.29,-0.36,-0.42)</code></pre>
+<p>Add this new column to our dfMil data frame, and name it
+“PValue”.</p>
+<pre class="r"><code>dfMil$Pvalue &lt;- NewColumn
+cat(&quot;After adding a new column&quot;, &quot;\n&quot;)</code></pre>
+<pre><code>## After adding a new column</code></pre>
+<pre class="r"><code>dfMil</code></pre>
+<pre><code>##    Time  CD Suic Pvalue
+## 1  2000   0  153   0.00
+## 2  2001   0  155   0.00
+## 3  2002   0  174   0.00
+## 4  2003 312  190   0.84
+## 5  2004 735  197   0.86
+## 6  2005 739  182   0.79
+## 7  2006 769  213   0.83
+## 8  2007 847  211   0.87
+## 9  2008 352  268   0.47
+## 10 2009 346  309   0.27
+## 11 2010 456  295   0.25
+## 12 2011 394  301   0.22
+## 13 2012 259  525   0.00
+## 14 2013   0  475  -0.19
+## 15 2014   0  444  -0.29
+## 16 2015   0  478  -0.36
+## 17 2016   0  478  -0.42</code></pre>
+<p>There is our new column “Pvalue”</p>
+<ol start="10" style="list-style-type: decimal">
+<li>The P values can now be inserted directly into a graph using a
+concise line of code!</li>
+</ol>
+<pre class="r"><code>plot(Suic ~Time,data=dfMil)
+text(Suic ~Time, labels=Pvalue,data=dfMil, font=2)</code></pre>
+<p><img src="p08_files/figure-html/Model%20Ex2-1.png" width="672" /></p>
+<p>This is close to what I had in mind, but we’ve lost the detail of my
+previous graph. In any event, we can add more individualized text for
+specific labels.</p>
+<pre class="r"><code>NewColumnChar &lt;- c(&quot;P Value 2000&quot;,0,0,0.84,0.86,0.79,0.83,0.87,0.47,0.27,0.25,0.22,0.00E+00,-0.19,-0.29,-0.36,-0.42)</code></pre>
+<pre class="r"><code>dfMil$PvalueChar &lt;- NewColumnChar</code></pre>
+<pre class="r"><code>plot(Suic ~Time,data=dfMil)
+text(Suic ~Time, labels=PvalueChar,data=dfMil, font=2)</code></pre>
+<p><img src="p08_files/figure-html/Model%20Text%20Labels-1.png" width="672" /></p>
+<p>On the plus side, I’ve found a way to insert labels from a column in
+my data frame, using concise code. On the con side, I’m now dealing with
+an extremely rudimentary graph; all of the refinement of my graph at
+step #3 is now absent from this code. I’ll need to find a way to
+re-incorporate my labels into my preferred graphing code, from step #3.
+Nonetheless, I am glad that such concise code is available, and this can
+be built upon!</p>
 
 
 

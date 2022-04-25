@@ -10,8 +10,9 @@
 
 
 
+<meta name="date" content="2022-04-11" />
 
-<title>Portfolio 6</title>
+<title>Portfolio 6- Visualizing Statistics, Part 1</title>
 
 <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -32,6 +33,13 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.0/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -293,18 +301,201 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 6</h1>
+<h1 class="title toc-ignore">Portfolio 6- Visualizing Statistics, Part
+1</h1>
+<h4 class="date">April 11, 2022</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>For this portfolio, I’d like to find a way to include a
+non-cluttered, key takeaway figure within a graph. To begin with, I will
+start with the simple p value. Specifically, I would like to depict the
+p value somewhere on the graph itself with a simple text box containing
+“p=#.##”. Conceptually, it seems to me that including the p value on the
+graph itself might make for a better or more persuasive visual
+presentation. So, let’s see what it might look like to show the
+relationship among variables in the graph and provide a statistical
+figure on that same graph. Note: I use a two sample t-test AKA
+independent samples t-test below. Specifically, the Welch’s t-test. I
+believe that there are issues with the use of measures of statistical
+significance when exhaustive data are analyzed. That is the case with
+these two variables (military suicide and combat deaths) which are not
+“sample” data but rather all available data on the subjects. But for
+demonstration purposes, I’ll use the p value here.</p>
+<ol style="list-style-type: decimal">
+<li>First, installing packages / libraries, and -of course- our awesome
+“Stop the errors” code.</li>
+</ol>
+<pre class="r"><code>r = getOption(&quot;repos&quot;)
+r[&quot;CRAN&quot;] = &quot;http://cran.us.r-project.org&quot;
+options(repos = r)</code></pre>
+<pre class="r"><code>install.packages(&#39;tidyr&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//Rtmpmom5Fk/downloaded_packages</code></pre>
+<pre class="r"><code>install.packages(&#39;readr&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//Rtmpmom5Fk/downloaded_packages</code></pre>
+<pre class="r"><code>library(ggplot2)
+library(tidyr)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Next, reading my Excel doc into a dataframe</li>
+</ol>
+<pre class="r"><code>library(readr)
+dfMilStatsTest &lt;-  read.csv(&quot;~/Documents/GitHub/Portfolio6-VizStats/MilStatsExcel.csv&quot;)</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>For our first attempt, let’s get a bit of summary data before going
+on to insert a p value somewhere near the legend.</li>
+</ol>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>## ✓ tibble  3.1.6     ✓ stringr 1.4.0
+## ✓ purrr   0.3.4     ✓ forcats 0.5.1
+## ✓ dplyr   1.0.8</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(ggpubr)
+library(rstatix)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;rstatix&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter</code></pre>
+<pre class="r"><code>dfMilStatsTest %&gt;%
+  group_by(Object) %&gt;%
+  get_summary_stats(Value, type = &quot;mean_sd&quot;)</code></pre>
+<pre><code>## # A tibble: 2 × 5
+##   Object        variable     n  mean    sd
+##   &lt;chr&gt;         &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 combat_deaths Value       17  306.  313.
+## 2 suicides      Value       17  297.  132.</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Next, the T test:</li>
+</ol>
+<pre class="r"><code>res &lt;- t.test(Value ~ Object, data = dfMilStatsTest, paired = TRUE)
+res</code></pre>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  Value by Object
+## t = 0.10087, df = 16, p-value = 0.9209
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -189.5716  208.5128
+## sample estimates:
+## mean of the differences 
+##                9.470588</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>With a p-value = 0.9209, let’s see how we can plug that in to our
+graph.</li>
+</ol>
+<p>This website contains an excellent tutorial on how to use R to do
+time series correlations: <a
+href="https://www.lobdata.com.br/2020/09/15/how-to-perform-correlation-analysis-in-time-series-data-using-r/"
+class="uri">https://www.lobdata.com.br/2020/09/15/how-to-perform-correlation-analysis-in-time-series-data-using-r/</a></p>
+<p>We’ll get our necessary packages/libraries and run those:</p>
+<pre class="r"><code>install.packages(&#39;feasts&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//Rtmpmom5Fk/downloaded_packages</code></pre>
+<pre class="r"><code>install.packages(&#39;tsibble&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//Rtmpmom5Fk/downloaded_packages</code></pre>
+<pre class="r"><code>install.packages(&#39;lubridate&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//Rtmpmom5Fk/downloaded_packages</code></pre>
+<pre class="r"><code>install.packages(&#39;TSstudio&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//Rtmpmom5Fk/downloaded_packages</code></pre>
+<pre class="r"><code>library(feasts)</code></pre>
+<pre><code>## Loading required package: fabletools</code></pre>
+<pre class="r"><code>library(tsibble)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;tsibble&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, union</code></pre>
+<pre class="r"><code>library(lubridate)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:tsibble&#39;:
+## 
+##     interval</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     date, intersect, setdiff, union</code></pre>
+<pre class="r"><code>library(TSstudio)</code></pre>
+<pre class="r"><code>library(readr)
+forTSdf &lt;- read_csv(&quot;~/Documents/GitHub/Portfolio6-VizStats/forTSdf.csv&quot;)</code></pre>
+<pre><code>## Rows: 17 Columns: 5
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): Object
+## dbl (4): Time, Value, CD, Suic
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>View(forTSdf)</code></pre>
+<pre class="r"><code>install.packages(&quot;dplyr&quot;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//Rtmpmom5Fk/downloaded_packages</code></pre>
+<pre class="r"><code>library(dplyr)</code></pre>
+<p>(These steps are all laid out in the tutorial linked to above)</p>
+<pre class="r"><code>TSdf &lt;- forTSdf %&gt;%
+  select(Time, CD, Suic)</code></pre>
+<pre class="r"><code>TSdf2 &lt;- ts(data = TSdf[, c(&quot;CD&quot;, &quot;Suic&quot;)],
+   start = c(2000),
+   end = c(2016), 
+   frequency = 1)</code></pre>
+<pre class="r"><code>ts_info(TSdf2)</code></pre>
+<pre><code>##  The TSdf2 series is a mts object with 2 variables and 17 observations
+##  Frequency: 1 
+##  Start time: 2000 1 
+##  End time: 2016 1</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>Plotting the time series data</li>
+</ol>
+<pre class="r"><code>ts_plot(TSdf2,
+        title = &quot;Military Suicides and Combat Deaths&quot;,
+        Ytitle = &quot;Suicides and Combat Deaths&quot;,
+        Xtitle = &quot;Year&quot;)</code></pre>
+<div id="htmlwidget-babd7bc419a3257a472e" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-babd7bc419a3257a472e">{"x":{"visdat":{"12ee62b6a4413":["function () ","plotlyVisDat"]},"cur_data":"12ee62b6a4413","attrs":{"12ee62b6a4413":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":[2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016],"y":[0,0,0,312,735,739,769,847,352,346,456,394,259,0,0,0,0],"type":"scatter","mode":"lines","name":"CD","line":{"dash":null},"inherit":true},"12ee62b6a4413.1":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":[2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016],"y":[153,155,174,190,197,182,213,211,268,309,295,301,525,475,444,478,478],"type":"scatter","mode":"lines","name":"Suic","line":{"dash":null},"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"Year","showgrid":false},"yaxis":{"domain":[0,1],"automargin":true,"title":"Suicides and Combat Deaths","showgrid":false},"title":"Military Suicides and Combat Deaths","hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016],"y":[0,0,0,312,735,739,769,847,352,346,456,394,259,0,0,0,0],"type":"scatter","mode":"lines","name":"CD","line":{"color":"rgba(31,119,180,1)","dash":[]},"marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016],"y":[153,155,174,190,197,182,213,211,268,309,295,301,525,475,444,478,478],"type":"scatter","mode":"lines","name":"Suic","line":{"color":"rgba(255,127,14,1)","dash":[]},"marker":{"color":"rgba(255,127,14,1)","line":{"color":"rgba(255,127,14,1)"}},"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<ol start="7" style="list-style-type: decimal">
+<li>Correlations on the time series data:</li>
+</ol>
+<pre class="r"><code>TSdf2[, c(&quot;CD&quot;)] %&gt;% 
+  acf(lag.max = 300,
+      main = &quot;Autocorrelation Plot - CD&quot;)</code></pre>
+<p><img src="p06_files/figure-html/Corr1-1.png" width="672" /></p>
+<pre class="r"><code>TSdf2[, c(&quot;CD&quot;)] %&gt;% 
+  acf(lag.max = 300,
+      main = &quot;Autocorrelation Plot - Suic&quot;)</code></pre>
+<p><img src="p06_files/figure-html/Corr2-1.png" width="672" /></p>
+<p>That is the output for showing time series correlations, but I’ve
+realized something crucial: The statistical analysis that is appropriate
+for time series data does not depict something that may be very
+interesting to people interested in correlations about data over time!
+What I’ve learned from this portfolio is that I’m going to have to
+select the correct statistical formula, and also ensure that the
+statistical results depict the key results of interest to lay people. In
+other words, what I would like to depict is the way military suicide
+relates to combat deaths over time, year by year in the following
+format:</p>
+<p>Data Point 1: Correlation in 2000 Data Point 2: Correlation in 2001
+(data for years 2000-2001) Data Point 3: Correlation in 2002 (data for
+years 2000-2002) etc. etc.</p>
+<p>As data accumulate over time, the correlation would presumably change
+as well. It is the cumulative correlation that I want to capture, as
+that cumulative correlation changes over time. That is what I will turn
+to next, in Portfolio 7.</p>
 
 
 

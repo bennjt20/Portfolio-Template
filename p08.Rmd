@@ -1,5 +1,185 @@
 ---
-title: "Portfolio 8"
+title: "Portfolio 8- Including Concise Text Labels within Graphs"
+output: html_document
+date: 'April 19, 2022'
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+With Portfolio 7, I saw how to insert text within a graph. This could be useful for all sorts of reasons. The drawback with the method I used was that I had to manually insert an x & y coordinate for each text item, as well as a color and each individual text itself. Each text item requires one line of code. For this project, I want to see if there is a more concise code for doing this.
+
+1) First, we must install packages / libraries, and a code that I need for Mac. 
+
+```{r Stop the errors!}
+r = getOption("repos")
+r["CRAN"] = "http://cran.us.r-project.org"
+options(repos = r)
+```
+
+```{r Packages}
+install.packages('tidyr')
+install.packages('readr')
+```
+
+```{r Library}
+library(ggplot2)
+library(tidyr)
+```
+
+```{r dplyr install} 
+install.packages("dplyr")
+```
+
+```{r dplyr library} 
+library(dplyr)
+```
+
+2) Next, I will read my Excel docs into a data frame:
+```{r Read data from CSV into a dataframe}
+library(readr)
+dfMil <-read.csv("~/Documents/GitHub/Portfolio7-VizStats2/dfMil.csv")
+View(dfMil)
+```
+
+```{r Read data from CSV into a dataframe2}
+MilStatsExcel <-read.csv("~/Documents/GitHub/Portfolio7-VizStats2/MilStatsExcel.csv")
+View(MilStatsExcel)
+```
+
+And we'll need ggrepel for the Text boxes.
+
+```{r Text into graph1}
+install.packages("ggrepel")
+library(ggrepel)
+```
+
+3) Here is my previous example, from Portfolio 7, of what we can do with the text boxes.
+
+```{r Text box into graph, manual method2}
+colors <- c("Suic" = "red", "CD" = "orange")
+ggplot(dfMil, aes(x=Time)) +
+  geom_line(aes(y = Suic, color = "Suic"), size = 1.5) +
+  geom_line(aes(y = CD, color="CD"), size = 1.5) +
+labs(                                
+   x = "Year",
+   y = "Number of Mil. Suicides and Combat Deaths",
+   color = "Legend"
+ ) +
+scale_color_manual(values = colors) +
+  scale_x_continuous(breaks = c(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016)) +
+theme(text = element_text(size=7),
+        axis.text.x = element_text(angle=45, hjust=1)) +
+geom_text(x=2003, y=300, label="0.84", color="blue") +
+geom_text(x=2004, y=750, label="0.86", color="blue") +
+  geom_text(x=2005, y=750, label="0.79", color="blue") +
+geom_text(x=2006, y=775, label="0.83", color="blue") +
+geom_text(x=2007, y=850, label="0.87", color="blue") +
+  geom_text(x=2008, y=350, label="0.47", color="blue") +
+geom_text(x=2009, y=350, label="0.27", color="blue") +
+geom_text(x=2010, y=450, label="0.25", color="blue") +
+  geom_text(x=2011, y=400, label="0.22", color="blue") +
+  geom_text(x=2012, y=300, label="(see notes)", color="blue") +
+geom_text(x=2013, y=0, label="-0.19", color="blue") +
+  geom_text(x=2014, y=0, label="-0.29", color="blue") +
+  geom_text(x=2015, y=0, label="-0.36", color="blue") +
+  geom_text(x=2016, y=0, label="-0.42", color="blue")
+```
+
+That was close to what I'm looking for. However, the placement of the text needs a more aesthetic position that aligns with a quantitative meaning. Also, I really need more concise code for inserting multiple texts into a graph. Let's see how we might be able to go about that.
+
+4) Using a simple example from the RPubs website (https://rpubs.com/RatherBit/188960), I am going to mirror the example code with my own data. Here is the data example from RPubs:
+
+```{r Test1}
+library(car)
+data(cars)
+head(cars)
+```
+ 
+5)  Let's look at our data frames:
+```{r Look at df from RPubs}
+str(cars) 
+``` 
+ 
+```{r Look at dfMil}
+str(dfMil) 
+``` 
+ 
+6)  Next, we'll summarize the model
+```{r Summarize model from RPubs}
+mod <- lm(dist ~speed, data=cars)
+summary(mod) 
+```
+ 
+```{r Summarize model dfMil}
+mod_dfMil <- lm(Suic ~Time, data=dfMil)
+summary(mod_dfMil) 
+``` 
+ 
+7) Now, we'll add labels to points using rownames. 
+ 
+```{r Plot rownames}
+plot(dist ~speed, col="lightblue", pch=19, cex=2,data=cars)
+# this will add labels to points using rownames:
+text(dist ~speed, labels=rownames(cars),data=cars, cex=0.9, font=2)
+```
+
+```{r Plot rownames2}
+plot(Suic ~Time, col="lightblue", pch=19, cex=2,data=dfMil)
+text(Suic ~Time, labels=rownames(dfMil),data=dfMil, cex=0.9, font=2)
+``` 
+ 
+This code is just fine when we already have a row name built in to our data frame. Most of the time, I don't know whether we can count on that. Clearly we need labels that illustrate something of interest to our data, when we do not have a row name. The following code allows us to use the data from ANY ROW in our data frame as the label for each individual data point.
+
+8) Label using existing column from data frame.
+
+```{r Model Ex1}
+plot(Suic ~Time,data=dfMil)
+text(Suic ~Time, labels=CD,data=dfMil, font=2)
+``` 
+
+At this point, it is clear that the text labels will only be limited by our imagination, and whatever characters we can fit into a data frame!
+
+Let's return to my graph from Portfolio 7. I wanted to insert text at each year, showing the correlation between two variables. I'm simply going to plug the correlations for each year into the data frame and create a new column named "Pvalue", then add those P values as labels. 
+
+Do do this, we can use this easy to follow code, from a site with way too many ads: https://r-lang.com/how-to-add-column-to-r-data-frame/
+
+9) We can copy and paste values into our line of code. Make sure that the number of rows in our data frame (17) are equal to the length of our vector. The only drawback here is that I have to add a comma to each value, which could be time-consuming for large data sets. Of course, there is almost certainly code that automatically adds commas, but for now we'll just go manual.
+
+```{r New column}
+NewColumn <- c(0,0,0,0.84,0.86,0.79,0.83,0.87,0.47,0.27,0.25,0.22,0.00E+00,-0.19,-0.29,-0.36,-0.42)
+```
+
+Add this new column to our dfMil data frame, and name it "PValue".
+
+```{r Add this new column to dfMil}
+dfMil$Pvalue <- NewColumn
+cat("After adding a new column", "\n")
+dfMil
+```
+
+There is our new column "Pvalue" 
+
+10) The P values can now be inserted directly into a graph using a concise line of code! 
+
+```{r Model Ex2}
+plot(Suic ~Time,data=dfMil)
+text(Suic ~Time, labels=Pvalue,data=dfMil, font=2)
+``` 
+
+This is close to what I had in mind, but we've lost the detail of my previous graph. In any event, we can add more individualized text for specific labels.
+
+```{r Text labels}
+NewColumnChar <- c("P Value 2000",0,0,0.84,0.86,0.79,0.83,0.87,0.47,0.27,0.25,0.22,0.00E+00,-0.19,-0.29,-0.36,-0.42)
+```
+
+```{r Add this new column to dfMil2}  
+dfMil$PvalueChar <- NewColumnChar
+```
+
+```{r Model Text Labels}
+plot(Suic ~Time,data=dfMil)
+text(Suic ~Time, labels=PvalueChar,data=dfMil, font=2)
+``` 
+
+On the plus side, I've found a way to insert labels from a column in my data frame, using concise code. On the con side, I'm now dealing with an extremely rudimentary graph; all of the refinement of my graph at step #3 is now absent from this code.
+I'll need to find a way to re-incorporate my labels into my preferred graphing code, from step #3. Nonetheless, I am glad that such concise code is available, and this can be built upon! 
+
+

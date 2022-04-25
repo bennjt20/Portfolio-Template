@@ -10,8 +10,9 @@
 
 
 
+<meta name="date" content="2022-04-03" />
 
-<title>Portfolio 3</title>
+<title>Portfolio 3- Military Combat Deaths Compared with Military Suicides</title>
 
 <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -293,18 +294,168 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 3</h1>
+<h1 class="title toc-ignore">Portfolio 3- Military Combat Deaths
+Compared with Military Suicides</h1>
+<h4 class="date">April 3, 2022</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>Picking up from Portfolio2, I first tried to carry over the code from
+the UN development animation. As I discovered, it was easier to find a
+code structure similar to the visual I want to create, rather than
+trying to reserve engineer the UN data visualization.</p>
+<p>Install packages / libraries, and a code that I need for Mac.</p>
+<pre class="r"><code>r = getOption(&quot;repos&quot;)
+r[&quot;CRAN&quot;] = &quot;http://cran.us.r-project.org&quot;
+options(repos = r)</code></pre>
+<ol style="list-style-type: decimal">
+<li>First, installing packages / libraries. Note: When I had created the
+final visualization, then knitted the file, R gave me an error message
+about the install.packages, so I removed this command from the knitted
+version: ``{r Packages}
+install.packages(c(‘gapminder’,‘ggplot2’,‘gganimate’,‘gifski’, ‘tidyr’,
+‘ggrepel’))</li>
+</ol>
+<pre><code>
+
+```r
+library(gganimate)</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre class="r"><code>library(ggplot2)
+library(gifski)
+library(tidyr)
+library(ggrepel)
+theme_set(theme_bw())</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Next, let’s make our data set. The best data source on this subject
+I could track down, that provided both suicides and combat deaths, was
+an a report from a U.S. Army military staff college. Ivey, Mark W.
+“Service Member Suicide and Readiness: An Analysis,” (2017). This report
+contained a graph, which itself cited to two separate reports.
+Therefore, the data below is second-hand and needs to be confirmed.
+However, I proceed with the following figures for demonstration
+purposes:</li>
+</ol>
+<pre class="r"><code>MilStats &lt;- data.frame(suicides = c(153, 155, 174, 190, 197, 182, 213, 211, 268, 309, 295, 301, 525, 475, 444, 478, 478),
+                  combat_deaths = c(0, 0, 0, 312, 735, 739, 769, 847, 352, 346, 456, 394, 259, 0, 0, 0, 0),
+                  year = c(2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016))</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Now, save the dataset as csv:</li>
+</ol>
+<pre class="r"><code>library(readr)
+write_csv(MilStats, &quot;~/Documents/GitHub/Portfolio3-Mil_Combat_Data/MilStatsExcelTest.csv&quot;)</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Let’s take a look at our static, non-animated plot</li>
+</ol>
+<pre class="r"><code>ggplot(data = MilStats, aes(x= year, y = combat_deaths, suicides)) +
+   geom_point(alpha = 0.7, show.legend = FALSE) +
+   labs(title = &#39;Year: 2000-2016&#39;, x = &#39;Year&#39;, y = &#39;Number of Deaths / Suicides&#39;)</code></pre>
+<p><img src="p03_files/figure-html/Scatterplot-1.png" width="672" /></p>
+<p>It was at this point that I realized I was going to need to search
+for a code that more closely matched exactly what I was trying to
+depict. Joachim Schork, the founder of the wonderful educational
+platform for programming tutorials, has many straightforward, accessible
+codes to suit a beginner’s needs. <a
+href="https://statisticsglobe.com/draw-multiple-time-series-in-same-plot-in-r"
+class="uri">https://statisticsglobe.com/draw-multiple-time-series-in-same-plot-in-r</a></p>
+<p>From this point forward, I used the code found at the Statistics
+Globe link above.</p>
+<ol start="5" style="list-style-type: decimal">
+<li>Moving on, let’s enter one variable at a time, starting with
+suicides.</li>
+</ol>
+<pre class="r"><code>plot(MilStats$year,                    # Draw first time series
+     MilStats$suicides,
+     type = &quot;l&quot;,
+     col = 2,
+     ylim = c(0, 1000),
+     xlab = &quot;Year&quot;,
+     ylab = &quot;Values&quot;)
+legend(&quot;topright&quot;,                     # Add legend to plot
+       c(&quot;suicides&quot;),
+       lty = 1,
+       col = 2:4)</code></pre>
+<p><img src="p03_files/figure-html/MultipleVars1-1.png" width="672" /></p>
+<p>Next, let’s plot our second variable, combat deaths, with a different
+color.</p>
+<pre class="r"><code>plot(MilStats$year,                    # Draw second time series
+     MilStats$combat_deaths,
+     type = &quot;l&quot;,
+     col = 3,
+     ylim = c(0, 1000),
+     xlab = &quot;Year&quot;,
+     ylab = &quot;Values&quot;)
+legend(&quot;topright&quot;,                     # Add legend to plot
+       c(&quot;combat_deaths&quot;),
+       lty = 1,
+       col = 3:4)</code></pre>
+<p><img src="p03_files/figure-html/MultipleVars2-1.png" width="672" /></p>
+<p>Next, we combine the two.</p>
+<pre class="r"><code>plot(MilStats$year,                    
+     MilStats$suicides,
+     type = &quot;l&quot;,
+     col = 2,
+     ylim = c(0, 1000),
+     xlab = &quot;Year&quot;,
+     ylab = &quot;Values&quot;)
+lines(MilStats$year,                    
+     MilStats$combat_deaths,
+     type = &quot;l&quot;,
+     col = 3)
+legend(&quot;topright&quot;,                     
+       c(&quot;combat_deaths&quot;, &quot;suicides&quot;),
+       lty = 1,
+       col = 2:3)</code></pre>
+<p><img src="p03_files/figure-html/Combine-1.png" width="672" /></p>
+<ol start="6" style="list-style-type: decimal">
+<li>Finally, here was my attempted code for animating:</li>
+</ol>
+<p>``{r Animate} plot(data=MilStats<span
+class="math inline">\(year,  MilStats\)</span>suicides, type = “l”, col
+= 2, ylim = c(0, 1000), xlab = “Year”, ylab = “Values”)
+lines(MilStats<span
+class="math inline">\(year,  MilStats\)</span>combat_deaths, type = “l”,
+col = 3) legend(“topright”,<br />
+c(“combat_deaths”, “suicides”), lty = 1, col = 2:3) labs(title = ‘Year:
+{frame_time}’, x = ‘Year’, y = ‘Deaths due to Combat and Suicide’) +
+transition_time(year) + ease_aes(‘linear’) animate(MilStats)</p>
+<pre><code>
+This gave me the error &quot;animation of data.frame objects not supported&quot;
+
+7) So, I hunted for a different code. Dutch data scientist Joαchim Goedhαrt has a terrific script that provides explanations for his code:
+https://github.com/JoachimGoedhart/Animate-Labeled-TimeSeries
+
+I edited my Excel file by hand, so that the relationship between my Excel formatting and my code would match Joαchim Goedhαrt&#39;s code structure. This made for an incredibly easy transition. Lesson learned: finding the right code can be harder than making the code run with your unique data. Never quit!
+
+I read my new Excel doc into a dataframe
+
+```r
+library(readr)
+dfMilStatsTest &lt;-  read.csv(&quot;~/Documents/GitHub/Portfolio3-Mil_Combat_Data/MilStatsExcel.csv&quot;)</code></pre>
+<ol start="8" style="list-style-type: decimal">
+<li>Next, for the coup-de-main: the animation code (all comments
+following # are fully credited to Mr. Goedhαrt)</li>
+</ol>
+<pre class="r"><code>ggplot(dfMilStatsTest, aes(Time, Value, group = Object, color = Object)) + 
+  geom_line(size=1) +   
+  geom_point(size = 2) + 
+  geom_label_repel(aes(x = Time, y=Value, label = Object, fill = Object), hjust = 0, direction    = &quot;y&quot;, nudge_x = 20,
+                   fontface = &#39;bold&#39;,
+                   color = &#39;white&#39;, size=6,
+                   segment.color = &#39;grey50&#39;,
+                   segment.size = 0.5) +
+  transition_reveal(Time) </code></pre>
+<p><img src="p03_files/figure-html/Define%20aes-1.gif" /><!-- --></p>
+<p>Even after successfully creating the animation, when I knitted, the
+code above gave me an error in Line 133, where the # comment is. So I
+have deleted those comments in the code and pasted them below.
+<code>{r Code with # comments} #Define the aesthetics for the plot; x=Time, y=Value and each object is grouped and given a unique color ggplot(MilStatsExcel, aes(Time, Value, group = Object, color = Object)) +    geom_line(size=1) +      #Show a dot for the new datapoint that is added in a new frame (works well in the animation)   geom_point(size = 2) +    #Add labels, geom_label_repel from the ggrepel package is used to avoid overlap between the labels   geom_label_repel(aes(x = Time, y=Value, label = Object, fill = Object), hjust = 0, direction    = "y", nudge_x = 20,                    fontface = 'bold',                    color = 'white', size=6,                    segment.color = 'grey50',                    segment.size = 0.5) +    #This is where the magic happens          transition_reveal(Time)</code></p>
+<ol start="9" style="list-style-type: decimal">
+<li>Last, remember to save plot to your file!</li>
+</ol>
+<pre class="r"><code>ggsave(&#39;MilStats.png&#39;, width=8, height=8)</code></pre>
+<p>That did not work, so I just saved manually!</p>
 
 
 

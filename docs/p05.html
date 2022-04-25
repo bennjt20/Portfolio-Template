@@ -10,8 +10,9 @@
 
 
 
+<meta name="date" content="2022-04-10" />
 
-<title>Portfolio 5</title>
+<title>Portfolio 5- Time Series Data</title>
 
 <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -293,18 +294,88 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 5</h1>
+<h1 class="title toc-ignore">Portfolio 5- Time Series Data</h1>
+<h4 class="date">April 10, 2022</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>The goal of this portfolio is to make sure that I can work with time
+series data when I have two variables from different data sets where the
+times do not match up perfectly. Here, I have data on suicide rates from
+1999-2019. I have data from a separate source on social media usage over
+time, covering 2015-2021. Data on average number of minutes of U.S.
+social media usage by year comes from emarketer.com: <a
+href="https://www.emarketer.com/content/average-social-media-time-spent"
+class="uri">https://www.emarketer.com/content/average-social-media-time-spent</a>
+Data on suicide US rates comes from the official US government National
+Institute of Mental Health website: <a
+href="https://www.nimh.nih.gov/health/statistics/suicide#part_2557"
+class="uri">https://www.nimh.nih.gov/health/statistics/suicide#part_2557</a></p>
+<p>Let’s see how we can isolate out only the years for which we have
+data on both variables, which would be the years 2015-2019.</p>
+<ol style="list-style-type: decimal">
+<li>First, installing packages / libraries.</li>
+</ol>
+<pre class="r"><code>r = getOption(&quot;repos&quot;)
+r[&quot;CRAN&quot;] = &quot;http://cran.us.r-project.org&quot;
+options(repos = r)</code></pre>
+<pre class="r"><code>install.packages(&#39;tidyr&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpCz1IVR/downloaded_packages</code></pre>
+<pre class="r"><code>install.packages(&#39;readr&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpCz1IVR/downloaded_packages</code></pre>
+<pre class="r"><code>library(ggplot2)
+library(tidyr)</code></pre>
+<pre class="r"><code>library(readr)
+TimeSeries &lt;- read_csv(&quot;~/Documents/GitHub/Portfolio5-TimeSeries/TimeSeries.csv&quot;)</code></pre>
+<pre><code>## Rows: 23 Columns: 3
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (3): Time, Value_SR, Value_SMM
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>View(TimeSeries)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>To isolate the specific years 2015-2019, we can use the following
+code. This code creates a separate df named “DateRange” containing the
+specific years we are interested in. The “write” command will save our
+df named “DateRange” as a csv. That way, we’ll have a separate file
+containing our date range which we can share with others.</li>
+</ol>
+<pre class="r"><code>DateRange &lt;-TimeSeries [TimeSeries$Time &gt;= &quot;2015&quot; &amp; TimeSeries$Time &lt;= &quot;2019&quot;, ]
+write.csv(DateRange, &quot;~/Documents/GitHub/Portfolio5-TimeSeries/CsvfromDf.csv&quot;)</code></pre>
+<pre class="r"><code>ggplot(DateRange, aes(Time)) +
+  geom_line(aes(y = Value_SMM, color = &quot;SMM&quot;)) + 
+  geom_line(aes(y = Value_SR, color = &quot;SR&quot;))</code></pre>
+<p><img src="p05_files/figure-html/Test1-1.png" width="672" /></p>
+<p>When I initially tried to knit, I gott an error: could not find
+function “ggplot” The command “{r Stop the errors!}” at line 18 fixed
+the error!</p>
+<p>Finally, to switch the color of these lines so that SR is red, we can
+manually change the colors assigned to each variable. Let’s also add a
+legend.</p>
+<pre class="r"><code>colors &lt;- c(&quot;SMM&quot; = &quot;blue&quot;, &quot;SR&quot; = &quot;red&quot;)
+ggplot(DateRange, aes(x=Time)) +
+  geom_line(aes(y = Value_SMM, color = &quot;SMM&quot;), size = 1.5) +
+  geom_line(aes(y = Value_SR, color=&quot;SR&quot;), size = 1.5) +
+labs(                                
+   x = &quot;Year&quot;,
+   y = &quot;SR &amp; SMM&quot;,
+   color = &quot;Legend&quot;
+ ) +
+scale_color_manual(values = colors) </code></pre>
+<p><img src="p05_files/figure-html/Test2-1.png" width="672" /></p>
+<p>When I try to knit, I also get an error: could not find function
+“ggplot” Once more, the command “{r Stop the errors!}” at line 18 fixed
+the error!</p>
+<p>Saving plots to file to show that the code did produce graphs.</p>
+<pre class="r"><code>ggsave(&#39;000009.png&#39;, width=8, height=8)
+ggsave(&#39;000010.png&#39;, width=8, height=8)</code></pre>
 
 
 

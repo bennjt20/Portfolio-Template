@@ -10,8 +10,9 @@
 
 
 
+<meta name="date" content="2022-04-24" />
 
-<title>Portfolio 9</title>
+<title>Portfolio 9- Mediation</title>
 
 <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -293,18 +294,260 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 9</h1>
+<h1 class="title toc-ignore">Portfolio 9- Mediation</h1>
+<h4 class="date">April 24, 2022</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>For this portfolio, I’d like to pretend that I’m teaching an intro
+stats class on the topic of mediation. I want to be able to visualize
+the data points for students in a way that connects formulas to visible
+data points.</p>
+<ol style="list-style-type: decimal">
+<li>First, we must install packages / libraries, and a code that I need
+for Mac.</li>
+</ol>
+<pre class="r"><code>r = getOption(&quot;repos&quot;)
+r[&quot;CRAN&quot;] = &quot;http://cran.us.r-project.org&quot;
+options(repos = r)</code></pre>
+<pre class="r"><code>install.packages(&#39;tidyr&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpuHFVgm/downloaded_packages</code></pre>
+<pre class="r"><code>install.packages(&#39;readr&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpuHFVgm/downloaded_packages</code></pre>
+<pre class="r"><code>library(ggplot2)
+library(tidyr)</code></pre>
+<p>And install a mediation package:</p>
+<pre class="r"><code>install.packages(&#39;mediation&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpuHFVgm/downloaded_packages</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>For our data, let’s use an excellent how-to from UVA, looking at the
+relationship between grades and happiness, with self-esteem as a
+potential mediator. I’m also going to add a categorical factor “Gender”
+that we can look at as well. In the UVA data set, the mediator is
+continuous/numeric.</li>
+</ol>
+<p><a
+href="https://data.library.virginia.edu/introduction-to-mediation-analysis/"
+class="uri">https://data.library.virginia.edu/introduction-to-mediation-analysis/</a></p>
+<pre class="r"><code>myData &lt;- read.csv(&#39;http://static.lib.virginia.edu/statlab/materials/data/mediationData.csv&#39;)</code></pre>
+<p>I’ll convert the dataframe to a CSV so that I can manually add my
+Gender variable.</p>
+<pre class="r"><code>library(readr)  #this is required to make write_csv work
+write_csv(myData, &quot;~/Documents/GitHub/Portfolio9-Mediation/MedData.csv&quot;)  #don’t forget .csv at the end</code></pre>
+<pre class="r"><code>library(readr)
+MedDataVars &lt;-read.csv(&quot;~/Documents/GitHub/Portfolio9-Mediation/MedDataVars.csv&quot;)
+View(MedDataVars)</code></pre>
+<p>Step 1 of the mediation analysis is to verify a correlation between
+(X) Grades and (Y) happiness.</p>
+<pre class="r"><code>model.0 &lt;- lm(Y_hap ~ X_grades, MedDataVars)
+summary(model.0)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Y_hap ~ X_grades, data = MedDataVars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.0262 -1.2340 -0.3282  1.5583  5.1622 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   2.8572     0.6932   4.122 7.88e-05 ***
+## X_grades      0.3961     0.1112   3.564 0.000567 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.929 on 98 degrees of freedom
+## Multiple R-squared:  0.1147, Adjusted R-squared:  0.1057 
+## F-statistic:  12.7 on 1 and 98 DF,  p-value: 0.0005671</code></pre>
+<p>We’ve got ourselves a significant relationship between grades and
+happiness. 0.3961*** p&lt; 0.001</p>
+<p>Step 2 of the mediation analysis is to verify a correlation between
+(X) Grades and (M_se) our self-esteem mediator.</p>
+<pre class="r"><code>model.M &lt;- lm(M_se ~ X_grades, MedDataVars)
+summary(model.M)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = M_se ~ X_grades, data = MedDataVars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.3046 -0.8656  0.1344  1.1344  4.6954 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  1.49952    0.58920   2.545   0.0125 *  
+## X_grades     0.56102    0.09448   5.938 4.39e-08 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.639 on 98 degrees of freedom
+## Multiple R-squared:  0.2646, Adjusted R-squared:  0.2571 
+## F-statistic: 35.26 on 1 and 98 DF,  p-value: 4.391e-08</code></pre>
+<p>And now we see that we’ve got ourselves a significant relationship
+between grades and self-esteem. 0.56102 *** p&lt; 0.001</p>
+<p>Step 3 of the mediation analysis is to include our self-esteem
+mediator in looking at the relationship between X and Y.</p>
+<pre class="r"><code>model.Y &lt;- lm(Y_hap ~ X_grades + M_se, MedDataVars)
+summary(model.Y)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Y_hap ~ X_grades + M_se, data = MedDataVars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.7631 -1.2393  0.0308  1.0832  4.0055 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   1.9043     0.6055   3.145   0.0022 ** 
+## X_grades      0.0396     0.1096   0.361   0.7187    
+## M_se          0.6355     0.1005   6.321 7.92e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.631 on 97 degrees of freedom
+## Multiple R-squared:  0.373,  Adjusted R-squared:  0.3601 
+## F-statistic: 28.85 on 2 and 97 DF,  p-value: 1.471e-10</code></pre>
+<p>X_grades = 0.0396, p = 0.719 -Notice that X_grades is NO LONGER
+significant. M_se = 0.6355, p &lt; 0.001</p>
+<p>The results above show that the effect of X on Y disappeared, when
+M_se is included. This is an example of “full mediation”. In this
+context, self-esteem fully mediates between (X) grades and (Y)
+happiness.</p>
+<p>Finally, for bootstrapping.</p>
+<pre class="r"><code>library(mediation)</code></pre>
+<pre><code>## Loading required package: MASS</code></pre>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## 
+## Attaching package: &#39;Matrix&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:tidyr&#39;:
+## 
+##     expand, pack, unpack</code></pre>
+<pre><code>## Loading required package: mvtnorm</code></pre>
+<pre><code>## Loading required package: sandwich</code></pre>
+<pre><code>## mediation: Causal Mediation Analysis
+## Version: 4.5.0</code></pre>
+<pre class="r"><code>results &lt;- mediate(model.M, model.Y, treat=&#39;X_grades&#39;, mediator=&#39;M_se&#39;,
+                   boot=TRUE, sims=500)</code></pre>
+<pre><code>## Running nonparametric bootstrap</code></pre>
+<pre class="r"><code>summary(results)</code></pre>
+<pre><code>## 
+## Causal Mediation Analysis 
+## 
+## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
+## 
+##                Estimate 95% CI Lower 95% CI Upper p-value    
+## ACME             0.3565       0.2145         0.50  &lt;2e-16 ***
+## ADE              0.0396      -0.2089         0.28    0.74    
+## Total Effect     0.3961       0.1679         0.64  &lt;2e-16 ***
+## Prop. Mediated   0.9000       0.4961         1.98  &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Sample Size Used: 100 
+## 
+## 
+## Simulations: 500</code></pre>
+<p>What we’re really looking for here is the mediation effect. The
+mediation effect is labeled “ACME.” ACME is 0.3565, which is
+statistically significant. Again, the goal of mediation analysis is to
+see whether this effect is statistically significant, which it is in
+this case.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Now, let’s take a closer visual look at interaction effects. For
+this, the following blog contains very useful background and code: <a
+href="https://cran.r-project.org/web/packages/interactions/readme/README.html"
+class="uri">https://cran.r-project.org/web/packages/interactions/readme/README.html</a></li>
+</ol>
+<p>3.a) First, to install an interaction package.</p>
+<pre class="r"><code>install.packages(&#39;interactions&#39;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpuHFVgm/downloaded_packages</code></pre>
+<p>3.b) The Johnson-Neyman plot is one way to look at these effects.</p>
+<pre class="r"><code>library(interactions)
+interact1 &lt;- lm(Y_hap ~ X_grades * M_se, data = MedDataVars)
+sim_slopes(interact1, pred = X_grades, modx = M_se, jnplot = TRUE)</code></pre>
+<pre><code>## JOHNSON-NEYMAN INTERVAL 
+## 
+## The Johnson-Neyman interval could not be found. Is the p value for your
+## interaction term below the specified alpha?</code></pre>
+<p><img src="p09_files/figure-html/Viz%20interaction%20effects1-1.png" width="672" /></p>
+<pre><code>## SIMPLE SLOPES ANALYSIS 
+## 
+## Slope of X_grades when M_se = 2.958273 (- 1 SD): 
+## 
+##   Est.   S.E.   t val.      p
+## ------ ------ -------- ------
+##   0.11   0.15     0.76   0.45
+## 
+## Slope of X_grades when M_se = 4.860000 (Mean): 
+## 
+##   Est.   S.E.   t val.      p
+## ------ ------ -------- ------
+##   0.04   0.11     0.38   0.70
+## 
+## Slope of X_grades when M_se = 6.761727 (+ 1 SD): 
+## 
+##    Est.   S.E.   t val.      p
+## ------- ------ -------- ------
+##   -0.03   0.14    -0.20   0.84</code></pre>
+<p>3c) Plotting the points is another very helpful illustration.</p>
+<pre class="r"><code>interact_plot(interact1, pred = X_grades, modx = M_se, plot.points = TRUE)</code></pre>
+<p><img src="p09_files/figure-html/Viz%20interaction%20effects2-1.png" width="672" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li>I did not like the way the numeric mediatior graphs in the two
+graphs above. For that reason, I created a Gender variable to produce a
+clear, stark visual of the mediation relationship. For self-esteem
+scores from 0-5, I made those the Male scores, and Female scores were
+6-10.</li>
+</ol>
+<p>4.a) A recommended package for looking at interaction effects with
+categorical variables.</p>
+<pre class="r"><code>install.packages(&quot;lme4&quot;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpuHFVgm/downloaded_packages</code></pre>
+<p>4.b) In using the following code for the Johnson-Neyman plot, R
+Studio does not work well with factor moderators. With that in mind, the
+next steps will utilize a different code that plays along with our
+Male-Female variable.</p>
+<pre class="r"><code>library(interactions)
+library(&quot;lme4&quot;)
+interact2 &lt;- lm(Y_hap ~ X_grades * M_Gender, data = MedDataVars)
+sim_slopes(interact2, pred = X_grades, modx = M_Gender, jnplot = TRUE)</code></pre>
+<pre><code>## Warning: Johnson-Neyman intervals are not available for factor moderators.</code></pre>
+<pre><code>## SIMPLE SLOPES ANALYSIS 
+## 
+## Slope of X_grades when M_Gender = Female: 
+## 
+##   Est.   S.E.   t val.      p
+## ------ ------ -------- ------
+##   0.36   0.20     1.74   0.09
+## 
+## Slope of X_grades when M_Gender = Male: 
+## 
+##   Est.   S.E.   t val.      p
+## ------ ------ -------- ------
+##   0.08   0.14     0.56   0.57</code></pre>
+<p>4.c) This graph depicts the interaction very well. For females, the
+relationship between grades and happiness is very clear.</p>
+<pre class="r"><code>interact_plot(interact2, pred = X_grades, modx = M_Gender, plot.points = TRUE)</code></pre>
+<p><img src="p09_files/figure-html/Viz%20cat%20interaction%20effects2-1.png" width="672" /></p>
+<p>4.d) Finally, one more way to obtain a similar graph.</p>
+<pre class="r"><code>interact3 &lt;- lm(Y_hap ~ X_grades * M_Gender, data = MedDataVars)
+interact_plot(interact3, pred = X_grades, modx = M_Gender, plot.points = TRUE)</code></pre>
+<p><img src="p09_files/figure-html/Viz%20cat%20interaction%20effects3-1.png" width="672" /></p>
+<p>Visualizing mediation is an excellent technique for showing the
+underlying relationships behind the formulas. The formulas can be
+grasped more easily with a digestible graph, like these!</p>
 
 
 
