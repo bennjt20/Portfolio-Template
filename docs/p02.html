@@ -315,7 +315,7 @@ options(repos = r)</code></pre>
 <pre class="r"><code>install.packages(c(&#39;gapminder&#39;,&#39;ggplot2&#39;,&#39;gganimate&#39;,&#39;gifski&#39;))</code></pre>
 <pre><code>## 
 ## The downloaded binary packages are in
-##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//Rtmpz4z1A0/downloaded_packages</code></pre>
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpCY967f/downloaded_packages</code></pre>
 <pre class="r"><code>library(gapminder)
 library(gganimate)</code></pre>
 <pre><code>## Loading required package: ggplot2</code></pre>
@@ -2044,6 +2044,7 @@ as.data.frame(gapminder)</code></pre>
 ## 1704                 Zimbabwe    Africa 2007 43.48700   12311143    469.7093</code></pre>
 <pre class="r"><code>library(readr)
 write_csv(df, &quot;~/Documents/GitHub/Portfolio2Test/gapfinder_df.csv&quot;)</code></pre>
+<pre class="r"><code>setwd(&quot;~/Documents/GitHub/Portfolio-Template/docs/p02_files/figure-html&quot;)</code></pre>
 <pre class="r"><code>ggplot(data = df, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
    geom_point(alpha = 0.7, show.legend = FALSE) +
    scale_colour_manual(values = country_colors) +

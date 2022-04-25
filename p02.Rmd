@@ -35,6 +35,9 @@ library(readr)
 write_csv(df, "~/Documents/GitHub/Portfolio2Test/gapfinder_df.csv")
 ```
 
+```{r Set wd}
+setwd("~/Documents/GitHub/Portfolio-Template/docs/p02_files/figure-html")
+```
 
 ```{r Scatterplot}
 ggplot(data = df, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
