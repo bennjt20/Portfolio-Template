@@ -1,5 +1,5 @@
 ---
-title: "Portfolio 1- Decorative Data Point Icons"
+title: "Portfolio 1- Decorative Data Point IconsPLANB"
 output: html_document
 date: 'March 29, 2022'
 ---
@@ -9,6 +9,7 @@ Have you ever been bored by the standard black or red dots that depict data poin
 Have you ever wanted some other image to appear instead of those plain shapes? For instance... Cats!?
 The following tutorial will show how to create both a photographic background for your graph and -more importantly- an attention-grabbing icon. 
 This code for this tutorial is based on a blog post by Emma Rand: https://buzzrbeeline.blog/2018/06/13/fun-and-easy-r-graphs-with-images/
+
 
 1) First, install packages / libraries, and a code that I need for Mac. 
 
@@ -64,19 +65,10 @@ cats <- data.frame(age = c(0.5, 1, 1.5, 2, 2.5, 3),
 
 ```{r Df to CSV}
 library(readr)
-write_csv(cats, "~/Documents/GitHub/Portfolio-Template/p01_files/cats.csv") 
+write_csv(cats, "~/Documents/GitHub/Portfolio-Template/docs/p01/cats.csv") 
 ```
 
-3.1) Also, and very importantly, we are presuming that you have two photos in your working directory: one for a background, and one for the data point icon. For the purposes of this tutorial, we'll call those "catbox.png" for the background, and "cat1.png"
-Those curious about the code should definitely take a look at Emma Rand's blog (link above).
-
-```{r read in cat1, Photo in directory}
-cat1 <- readPNG("~/Documents/GitHub/Portfolio-Template/p01_files/cat1.png")
-```
-
-```{r read in catbox, Photo in directory}
-catbox <- readPNG("~/Documents/GitHub/Portfolio-Template/p01_files/catbox.png")
-```
+3.1) Also, and very importantly, we are presuming that you have two photos in your working directory: one for a background, and one for the data point icon. For the purposes of this tutorial, we'll call those "catbox.png" and "cat1.png"
 
 4) The basic graph would look something like this. 
 ```{r basic visual}
@@ -87,7 +79,17 @@ ggplot(data = cats, aes(x = age, y = incidents)) +
   ylim(0, 45)
 ```
 
-5) Let's take a look at that graph with a background image.
+5) Now we will read in the photo for our background. Our background photo is "catbox.png". Those curious about the code should definitely take a look at Emma Rand's blog (link above).
+
+```{r read in catbox}
+catbox <- readPNG("~/Documents/GitHub/Portfolio-Template/docs/p01/catbox.png")
+```
+
+```{r read in catIcon}
+catIcon <- readPNG("~/Documents/GitHub/Portfolio-Template/docs/p01/cat1.png")
+```
+
+6) Let's take a look at that graph now.
 ```{r insert background image}
 ggplot(data = cats, aes(x = age, y = incidents)) +
   annotation_custom(rasterGrob(catbox, 
@@ -102,17 +104,16 @@ ggplot(data = cats, aes(x = age, y = incidents)) +
 
 Frowney cat adds a twist to the graph. 
 
-6) Now let's work on the decorative data point.
+7) Now let's work on the decorative data point.
 
 ```{r Decorate your data points!}
 cats$image <- "cat1.png"
 ```
 That just added a column called "image" to the dataframe "cats".
 
-7) Next, we modify the code for the graph to include our data point photo which is now labeled "image", for the column in our dataframe. 
+8) Next, we modify the code for the graph to include our data point photo which is now labeled "image1", for the column in our dataframe. 
 
 ```{r Add the decorative data points to the graph}
-library(ggplot2)
 ggplot(data = cats, aes(x = age, y = incidents)) +
   annotation_custom(rasterGrob(catbox, 
                                width = unit(1,"npc"),
@@ -124,9 +125,4 @@ ggplot(data = cats, aes(x = age, y = incidents)) +
   ylim(0, 45)
 ```
 
-
 9) Reel them in with the background, and keep them riveted with the data point icons!
-
-```{r remove}
-rm(img_catbox)
-```
