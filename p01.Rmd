@@ -74,7 +74,7 @@ Those curious about the code should definitely take a look at Emma Rand's blog (
 cat1 <- readPNG("~/Documents/GitHub/Portfolio-Template/docs/p01_files/cat1.png")
 ```
 
-```{r read in catbox, Photo in directory}
+```{r read in catbox, Photo in directory2}
 catbox <- readPNG("~/Documents/GitHub/Portfolio-Template/docs/p01_files/catbox.png")
 ```
 
