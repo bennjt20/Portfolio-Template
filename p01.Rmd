@@ -64,18 +64,18 @@ cats <- data.frame(age = c(0.5, 1, 1.5, 2, 2.5, 3),
 
 ```{r Df to CSV}
 library(readr)
-write_csv(cats, "~/Documents/GitHub/Portfolio-Template/p01_files/cats.csv") 
+write_csv(cats, "~/Documents/GitHub/Portfolio-Template/docs/p01_files/cats.csv") 
 ```
 
 3.1) Also, and very importantly, we are presuming that you have two photos in your working directory: one for a background, and one for the data point icon. For the purposes of this tutorial, we'll call those "catbox.png" for the background, and "cat1.png"
 Those curious about the code should definitely take a look at Emma Rand's blog (link above).
 
 ```{r read in cat1, Photo in directory}
-cat1 <- readPNG("~/Documents/GitHub/Portfolio-Template/p01_files/cat1.png")
+cat1 <- readPNG("~/Documents/GitHub/Portfolio-Template/docs/p01_files/cat1.png")
 ```
 
 ```{r read in catbox, Photo in directory}
-catbox <- readPNG("~/Documents/GitHub/Portfolio-Template/p01_files/catbox.png")
+catbox <- readPNG("~/Documents/GitHub/Portfolio-Template/docs/p01_files/catbox.png")
 ```
 
 4) The basic graph would look something like this. 
@@ -111,22 +111,27 @@ That just added a column called "image" to the dataframe "cats".
 
 7) Next, we modify the code for the graph to include our data point photo which is now labeled "image", for the column in our dataframe. 
 
-```{r Add the decorative data points to the graph}
+Here is the code for adding the data point icons to the graph:
+``{r Add the decorative data points to the graph}
 library(ggplot2)
 ggplot(data = cats, aes(x = age, y = incidents)) +
-  annotation_custom(rasterGrob(catbox, 
-                               width = unit(1,"npc"),
-                               height = unit(1,"npc")), 
-                    -Inf, Inf, -Inf, Inf) +
-  geom_image(aes(image = image), size=.15) +
-  xlab("Age (years)") +
-  ylab("Number of Incidents") +
-  ylim(0, 45)
+annotation_custom(rasterGrob(catbox, 
+width = unit(1,"npc"),
+height = unit(1,"npc")), 
+-Inf, Inf, -Inf, Inf) +
+geom_image(aes(image = image), size=.15) +
+xlab("Age (years)") +
+ylab("Number of Incidents") +
+ylim(0, 45)
+``
+
+Once we have created that graph, we can take the image from the local file and use imager to add the image to our presentation.
+
+```{r add image to HTML}
+library(imager)
+CatDataPoints <- load.image("~/Documents/GitHub/Portfolio-Template/docs/p01_files/CatDataPoints.png")
+plot(CatDataPoints)
 ```
 
+Reel them in with the background, and keep them riveted with the data point icons!
 
-9) Reel them in with the background, and keep them riveted with the data point icons!
-
-```{r remove}
-rm(img_catbox)
-```
