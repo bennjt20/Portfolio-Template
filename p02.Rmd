@@ -35,10 +35,6 @@ library(readr)
 write_csv(df, "~/Documents/GitHub/Portfolio2Test/gapfinder_df.csv")
 ```
 
-```{r Set wd}
-setwd("~/Documents/GitHub/Portfolio-Template/docs/p02_files/figure-html")
-```
-
 ```{r Scatterplot}
 ggplot(data = df, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
    geom_point(alpha = 0.7, show.legend = FALSE) +
@@ -48,8 +44,9 @@ ggplot(data = df, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
    facet_wrap(~continent) +
    labs(title = 'Year: 1952-2007', x = 'GDP per capita', y = 'Life expectancy')
 ```
+
 ```{r Save plot to file}
-ggsave('plot_gdpPercap_lifeExp_static.png', width=8, height=8)
+ggsave("~/Documents/GitHub/Portfolio-Template/docs/p02_files/plot_gdpPercap_lifeExp_static2.png", width=8, height=8)
 ```
 
 ```{r Animating}
@@ -63,7 +60,7 @@ p1 <- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
              transition_time(year) +
              ease_aes('linear')
 animate(p1)
-anim_save('plot_gdpPercap_lifeExp.gif')
+anim_save("~/Documents/GitHub/Portfolio-Template/docs/p02_files/plot_gdpPercap_lifeExp.gif")
 ```
 
 So far so good. That works! Now to incorporate the death on Soldier deaths and suicides. 
