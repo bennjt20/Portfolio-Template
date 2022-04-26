@@ -117,7 +117,7 @@ sim_slopes(interact1, pred = X_grades, modx = M_se, jnplot = TRUE)
 interact_plot(interact1, pred = X_grades, modx = M_se, plot.points = TRUE)
 ```
 
-4) I did not like the way the numeric mediatior graphs in the two graphs above. For that reason, I created a Gender variable to produce a clear, stark visual of the mediation relationship. For self-esteem scores from 0-5, I made those the Male scores, and Female scores were 6-10. 
+4) I did not like the way the numeric mediator graphs in the two graphs above. For that reason, I created a Gender variable to produce a clear, stark visual of the mediation relationship. For self-esteem scores from 0-5, I made those the Male scores, and Female scores were 6-10. 
 
 4.a) A recommended package for looking at interaction effects with categorical variables. 
 
