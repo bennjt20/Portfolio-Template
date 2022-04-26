@@ -315,7 +315,7 @@ options(repos = r)</code></pre>
 <pre class="r"><code>install.packages(c(&#39;gapminder&#39;,&#39;ggplot2&#39;,&#39;gganimate&#39;,&#39;gifski&#39;))</code></pre>
 <pre><code>## 
 ## The downloaded binary packages are in
-##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//Rtmp9vMb4H/downloaded_packages</code></pre>
+##  /var/folders/ls/z3xhd0bx0jzchy3zd1hkbnhr0000gn/T//RtmpbM2mEh/downloaded_packages</code></pre>
 <pre class="r"><code>library(gapminder)
 library(gganimate)</code></pre>
 <pre><code>## Loading required package: ggplot2</code></pre>
@@ -2051,8 +2051,8 @@ write_csv(df, &quot;~/Documents/GitHub/Portfolio2Test/gapfinder_df.csv&quot;)</c
    scale_x_log10() +
    facet_wrap(~continent) +
    labs(title = &#39;Year: 1952-2007&#39;, x = &#39;GDP per capita&#39;, y = &#39;Life expectancy&#39;)</code></pre>
-<p><img src="p02_files/figure-html/Scatterplot-1.png" width="672" /></p>
-<pre class="r"><code>ggsave(&quot;~/Documents/GitHub/Portfolio-Template/docs/p02_files/plot_gdpPercap_lifeExp_static2.png&quot;, width=8, height=8)</code></pre>
+<p><img src="p02_files/figure-html/Scatterplot%20of%20gdpPercap%20and%20Lexp-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;~/Documents/GitHub/Portfolio-Template/docs/p02_files/plot_gdpPercap_lifeExp_static2Test.png&quot;, width=8, height=8)</code></pre>
 <pre class="r"><code>p1 &lt;- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
              geom_point(alpha = 0.7, show.legend = FALSE) +
              scale_colour_manual(values = country_colors) +
@@ -2063,7 +2063,8 @@ write_csv(df, &quot;~/Documents/GitHub/Portfolio2Test/gapfinder_df.csv&quot;)</c
              transition_time(year) +
              ease_aes(&#39;linear&#39;)
 animate(p1)</code></pre>
-<p><img src="p02_files/figure-html/Animating-1.gif" /><!-- --></p>
+<p><img
+src="p02_files/figure-html/Animation%20of%20gdpPercap%20and%20Lexp-1.gif" /><!-- --></p>
 <pre class="r"><code>anim_save(&quot;~/Documents/GitHub/Portfolio-Template/docs/p02_files/plot_gdpPercap_lifeExp.gif&quot;)</code></pre>
 <p>So far so good. That works! Now to incorporate the death on Soldier
 deaths and suicides.</p>

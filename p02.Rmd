@@ -1,12 +1,11 @@
 ---
 title: "Portfolio 2- Animation Basics"
 output: html_document
-date: 'March 30, 2022 '
+date: 'March 30, 2022'
 ---
 
 My goal was to translate a famous animation into an animation of different subject matter that I chose. So, I start with the code for Hans Rosling’s awesome animated plot of econ development data by continent. I want to take that code, and animate the relationship between US military deaths and US military suicides, in the period of the Iraq and Afghan wars. 
 Note: The animation of the military data begins on line 56 below. 
-
 
 First, install packages / libraries, and a code that I need for Mac. 
 
@@ -29,13 +28,12 @@ df=gapminder
 as.data.frame(gapminder)
 ```
 
-
 ```{r Df to CSV}
 library(readr)
 write_csv(df, "~/Documents/GitHub/Portfolio2Test/gapfinder_df.csv")
 ```
 
-```{r Scatterplot}
+```{r Scatterplot of gdpPercap and Lexp}
 ggplot(data = df, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
    geom_point(alpha = 0.7, show.legend = FALSE) +
    scale_colour_manual(values = country_colors) +
@@ -43,13 +41,10 @@ ggplot(data = df, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
    scale_x_log10() +
    facet_wrap(~continent) +
    labs(title = 'Year: 1952-2007', x = 'GDP per capita', y = 'Life expectancy')
+ggsave("~/Documents/GitHub/Portfolio-Template/docs/p02_files/plot_gdpPercap_lifeExp_static2Test.png", width=8, height=8)
 ```
 
-```{r Save plot to file}
-ggsave("~/Documents/GitHub/Portfolio-Template/docs/p02_files/plot_gdpPercap_lifeExp_static2.png", width=8, height=8)
-```
-
-```{r Animating}
+```{r Animation of gdpPercap and Lexp}
 p1 <- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
              geom_point(alpha = 0.7, show.legend = FALSE) +
              scale_colour_manual(values = country_colors) +
