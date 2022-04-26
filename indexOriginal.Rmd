@@ -1,0 +1,6 @@
+---
+title: "John Bennett's Portfolio"
+---
+
+This website hosts my [portfolio](https://github.com/bennjt20/Portfolio-Template.git) and [accompanying documentation](https://datascience4psych.github.io/DataScience4Psych/guidance.html#documenting-your-project) that I developed as part of [Data Science for Psychologists](https://datascience4psych.github.io/DataScience4Psych/). You can find the links to individual portfolio pieces in the header. Each piece has a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. I encourage you to explore them.
+
