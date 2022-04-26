@@ -76,8 +76,8 @@ Once more, the command "{r Stop the errors!}" at line 18 fixed the error!
 
 Saving plots to file to show that the code did produce graphs.
 ```{r Save plot to file}
-ggsave('000009.png', width=8, height=8)
-ggsave('000010.png', width=8, height=8)
+ggsave("~/Documents/GitHub/Portfolio-Template/docs/p05_files/000009.png", width=8, height=8)
+ggsave("~/Documents/GitHub/Portfolio-Template/docs/p05_files/000010.png", width=8, height=8)
 ```
 
 
