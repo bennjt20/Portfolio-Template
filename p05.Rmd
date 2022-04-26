@@ -51,7 +51,7 @@ ggplot(DateRange, aes(Time)) +
   geom_line(aes(y = Value_SR, color = "SR"))
 ```
 
-When I initially tried to knit, I gott an error: 
+When I initially tried to knit, the following error resulted: 
 could not find function "ggplot"
 The command "{r Stop the errors!}" at line 18 fixed the error!
 
